@@ -1,0 +1,47 @@
+Sort movies by (rating/year/popularity): rating
+
+Top 10 movies by rating:
+Movie 12345 | Rating: 10 | Year: 2012 | Popularity: 854321
+Movie 45678 | Rating: 10 | Year: 1998 | Popularity: 456789
+Movie 78234 | Rating: 10 | Year: 2020 | Popularity: 923456
+Movie 34567 | Rating: 10 | Year: 2005 | Popularity: 234567
+Movie 67891 | Rating: 10 | Year: 2018 | Popularity: 765432
+Movie 11223 | Rating: 9.9 | Year: 2015 | Popularity: 345678
+Movie 55678 | Rating: 9.9 | Year: 2001 | Popularity: 678901
+Movie 88990 | Rating: 9.9 | Year: 2023 | Popularity: 123456
+Movie 23456 | Rating: 9.9 | Year: 2010 | Popularity: 567890
+Movie 90123 | Rating: 9.9 | Year: 1995 | Popularity: 789012
+
+Sorted 100000 movies in 0.02 seconds.
+
+Sort movies by (rating/year/popularity): year
+
+Top 10 movies by year:
+Movie 54321 | Rating: 8.4 | Year: 2024 | Popularity: 456789
+Movie 12345 | Rating: 7.8 | Year: 2024 | Popularity: 823456
+Movie 76543 | Rating: 9.1 | Year: 2024 | Popularity: 345678
+Movie 34567 | Rating: 8.7 | Year: 2024 | Popularity: 912345
+Movie 67890 | Rating: 6.9 | Year: 2024 | Popularity: 234567
+Movie 11111 | Rating: 9.5 | Year: 2024 | Popularity: 654321
+Movie 22222 | Rating: 8.2 | Year: 2024 | Popularity: 789123
+Movie 33333 | Rating: 7.6 | Year: 2024 | Popularity: 345123
+Movie 44444 | Rating: 9.0 | Year: 2024 | Popularity: 567891
+Movie 55555 | Rating: 8.5 | Year: 2024 | Popularity: 678234
+
+Sorted 100000 movies in 0.02 seconds.
+
+Sort movies by (rating/year/popularity): popularity
+
+Top 10 movies by popularity:
+Movie 54321 | Rating: 8.7 | Year: 2018 | Popularity: 999876
+Movie 87654 | Rating: 9.1 | Year: 2020 | Popularity: 999543
+Movie 23456 | Rating: 7.8 | Year: 2015 | Popularity: 998765
+Movie 67890 | Rating: 8.9 | Year: 2022 | Popularity: 998234
+Movie 34567 | Rating: 9.3 | Year: 2010 | Popularity: 997891
+Movie 78901 | Rating: 8.1 | Year: 2005 | Popularity: 997456
+Movie 45678 | Rating: 7.9 | Year: 2019 | Popularity: 996823
+Movie 12345 | Rating: 9.0 | Year: 2014 | Popularity: 996234
+Movie 56789 | Rating: 8.5 | Year: 2009 | Popularity: 995678
+Movie 90123 | Rating: 9.2 | Year: 2021 | Popularity: 994321
+
+Sorted 100000 movies in 0.02 seconds.
