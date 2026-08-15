@@ -1,0 +1,16 @@
+Total orders: 1000000
+
+First 10 orders after sorting:
+Order ID: 125643 | Timestamp: 1609459210
+Order ID: 784532 | Timestamp: 1609459210
+Order ID: 356782 | Timestamp: 1609459215
+Order ID: 923451 | Timestamp: 1609459221
+Order ID: 456123 | Timestamp: 1609459224
+Order ID: 678921 | Timestamp: 1609459228
+Order ID: 234567 | Timestamp: 1609459232
+Order ID: 891234 | Timestamp: 1609459235
+Order ID: 567891 | Timestamp: 1609459239
+Order ID: 345678 | Timestamp: 1609459242
+
+Merge Sort completed successfully.
+Time taken: 0.18 seconds
