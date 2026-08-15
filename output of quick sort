@@ -1,0 +1,32 @@
+Sort movies by (rating/year/popularity): rating
+
+Top 10 movies sorted by rating:
+Inception | Rating: 8.8 | Year: 2010 | Popularity: 95
+Interstellar | Rating: 8.7 | Year: 2014 | Popularity: 92
+Oppenheimer | Rating: 8.6 | Year: 2023 | Popularity: 88
+Titanic | Rating: 7.9 | Year: 1997 | Popularity: 98
+Avatar | Rating: 7.8 | Year: 2009 | Popularity: 90
+
+Sorted 5 movies in 0.000001 seconds.
+
+Sort movies by (rating/year/popularity): year
+
+Top 10 movies sorted by year:
+Oppenheimer | Rating: 8.6 | Year: 2023 | Popularity: 88
+Interstellar | Rating: 8.7 | Year: 2014 | Popularity: 92
+Inception | Rating: 8.8 | Year: 2010 | Popularity: 95
+Avatar | Rating: 7.8 | Year: 2009 | Popularity: 90
+Titanic | Rating: 7.9 | Year: 1997 | Popularity: 98
+
+Sorted 5 movies in 0.000001 seconds.
+
+Sort movies by (rating/year/popularity): popularity
+
+Top 10 movies sorted by popularity:
+Titanic | Rating: 7.9 | Year: 1997 | Popularity: 98
+Inception | Rating: 8.8 | Year: 2010 | Popularity: 95
+Interstellar | Rating: 8.7 | Year: 2014 | Popularity: 92
+Avatar | Rating: 7.8 | Year: 2009 | Popularity: 90
+Oppenheimer | Rating: 8.6 | Year: 2023 | Popularity: 88
+
+Sorted 5 movies in 0.000001 seconds.
