@@ -1,0 +1,74 @@
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int N, W;
+
+    cout << "Enter number of items: ";
+    cin >> N;
+
+    vector<string> name(N);
+    vector<int> weight(N), utility(N);
+
+    for (int i = 0; i < N; i++) {
+        cout << "Enter item name, weight and utility: ";
+        cin >> name[i] >> weight[i] >> utility[i];
+    }
+
+    cout << "Enter truck capacity (kg): ";
+    cin >> W;
+
+    // dp[i][w] = maximum utility using first i items
+    // with a capacity of w kg.
+    vector<vector<int>> dp(
+        N + 1, vector<int>(W + 1, 0)
+    );
+
+    for (int i = 1; i <= N; i++) {
+        for (int w = 0; w <= W; w++) {
+            dp[i][w] = dp[i - 1][w];
+
+            if (weight[i - 1] <= w) {
+                dp[i][w] = max(
+                    dp[i][w],
+                    utility[i - 1] +
+                    dp[i - 1][w - weight[i - 1]]
+                );
+            }
+        }
+    }
+
+    // Recover selected items.
+    vector<int> selected;
+    int remaining = W;
+
+    for (int i = N; i > 0; i--) {
+        if (dp[i][remaining] != dp[i - 1][remaining]) {
+            selected.push_back(i - 1);
+            remaining -= weight[i - 1];
+        }
+    }
+
+    reverse(selected.begin(), selected.end());
+
+    int totalWeight = 0;
+
+    cout << "\nSelected relief items:\n";
+
+    for (int i : selected) {
+        cout << name[i]
+             << " - Weight: " << weight[i]
+             << " kg, Utility: " << utility[i] << '\n';
+
+        totalWeight += weight[i];
+    }
+
+    cout << "\nTotal weight: " << totalWeight << " kg\n";
+    cout << "Maximum utility: " << dp[N][W] << '\n';
+
+    return 0;
+}
