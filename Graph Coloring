@@ -1,0 +1,244 @@
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+#include <algorithm>
+#include <chrono>
+#include <numeric>
+#include <string>
+using namespace std;
+
+using Graph = vector<vector<int>>;
+
+struct Result {
+    vector<int> color;
+    int slots;
+    double milliseconds;
+};
+
+// Build graph: courses sharing a student are adjacent.
+Graph buildGraph(int n, const vector<vector<int>>& students) {
+    Graph g(n);
+    vector<unordered_set<int>> edges(n);
+
+    for (const auto& enrolled : students) {
+        for (int i = 0; i < (int)enrolled.size(); ++i) {
+            for (int j = i + 1; j < (int)enrolled.size(); ++j) {
+                int u = enrolled[i], v = enrolled[j];
+                if (u == v) continue;
+                edges[u].insert(v);
+                edges[v].insert(u);
+            }
+        }
+    }
+
+    for (int i = 0; i < n; ++i)
+        g[i] = vector<int>(edges[i].begin(), edges[i].end());
+
+    return g;
+}
+
+bool safeColor(int u, int c, const Graph& g,
+               const vector<int>& color) {
+    for (int v : g[u])
+        if (color[v] == c) return false;
+    return true;
+}
+
+// 1. Greedy Colouring: process courses in input order.
+Result greedy(const Graph& g) {
+    auto start = chrono::steady_clock::now();
+    int n = g.size();
+    vector<int> color(n, -1);
+    int slots = 0;
+
+    for (int u = 0; u < n; ++u) {
+        vector<bool> used(slots, false);
+        for (int v : g[u])
+            if (color[v] >= 0 && color[v] < slots)
+                used[color[v]] = true;
+
+        int c = 0;
+        while (c < slots && used[c]) ++c;
+        if (c == slots) ++slots;
+        color[u] = c;
+    }
+
+    auto end = chrono::steady_clock::now();
+    double ms = chrono::duration<double, milli>(end - start).count();
+    return {color, slots, ms};
+}
+
+// 2. Welsh-Powell: process vertices in descending degree order.
+Result welshPowell(const Graph& g) {
+    auto start = chrono::steady_clock::now();
+    int n = g.size();
+    vector<int> order(n), color(n, -1);
+    iota(order.begin(), order.end(), 0);
+
+    sort(order.begin(), order.end(), [&](int a, int b) {
+        return g[a].size() > g[b].size();
+    });
+
+    int slots = 0;
+    for (int u : order) {
+        int c = 0;
+        while (!safeColor(u, c, g, color)) ++c;
+        color[u] = c;
+        slots = max(slots, c + 1);
+    }
+
+    auto end = chrono::steady_clock::now();
+    double ms = chrono::duration<double, milli>(end - start).count();
+    return {color, slots, ms};
+}
+
+// 3. DSATUR: repeatedly choose the uncolored vertex
+// with highest saturation, breaking ties by degree.
+Result dsatur(const Graph& g) {
+    auto start = chrono::steady_clock::now();
+    int n = g.size();
+    vector<int> color(n, -1);
+    int slots = 0;
+
+    for (int step = 0; step < n; ++step) {
+        int best = -1, bestSat = -1, bestDegree = -1;
+
+        for (int u = 0; u < n; ++u) {
+            if (color[u] != -1) continue;
+
+            unordered_set<int> neighborColors;
+            for (int v : g[u])
+                if (color[v] != -1)
+                    neighborColors.insert(color[v]);
+
+            int sat = neighborColors.size();
+            int degree = g[u].size();
+
+            if (sat > bestSat ||
+                (sat == bestSat && degree > bestDegree)) {
+                best = u;
+                bestSat = sat;
+                bestDegree = degree;
+            }
+        }
+
+        int c = 0;
+        while (!safeColor(best, c, g, color)) ++c;
+        color[best] = c;
+        slots = max(slots, c + 1);
+    }
+
+    auto end = chrono::steady_clock::now();
+    double ms = chrono::duration<double, milli>(end - start).count();
+    return {color, slots, ms};
+}
+
+void printResult(const string& name, const Result& r) {
+    cout << "\n" << name
+         << "\nExam slots needed: " << r.slots
+         << "\nExecution time: " << r.milliseconds << " ms\n";
+    for (int i = 0; i < (int)r.color.size(); ++i)
+        cout << "Course " << i + 1
+             << " -> Slot " << r.color[i] + 1 << '\n';
+}
+
+// Room allocation: each slot has its own available rooms.
+// A course's enrollment must fit in the room capacity.
+struct Room {
+    string name;
+    int capacity;
+};
+
+bool allocateRooms(const Graph& g, const vector<int>& color,
+                   const vector<int>& enrollment,
+                   const vector<Room>& rooms) {
+    int slots = 0;
+    for (int c : color) slots = max(slots, c + 1);
+
+    for (int s = 0; s < slots; ++s) {
+        vector<bool> used(rooms.size(), false);
+
+        for (int u = 0; u < (int)color.size(); ++u) {
+            if (color[u] != s) continue;
+
+            int chosen = -1;
+            for (int r = 0; r < (int)rooms.size(); ++r) {
+                if (!used[r] && rooms[r].capacity >= enrollment[u]) {
+                    chosen = r;
+                    break;
+                }
+            }
+
+            if (chosen == -1) {
+                cout << "Room allocation failed for Course "
+                     << u + 1 << " in Slot " << s + 1 << '\n';
+                return false;
+            }
+
+            used[chosen] = true;
+            cout << "Course " << u + 1 << ", Slot " << s + 1
+                 << " -> " << rooms[chosen].name << '\n';
+        }
+    }
+    return true;
+}
+
+int main() {
+    int n, m;
+    cout << "Enter number of courses and students: ";
+    cin >> n >> m;
+
+    // Read each student's enrolled course numbers (1-based).
+    vector<vector<int>> studentCourses(m);
+    vector<int> enrollment(n, 0);
+
+    cout << "For each student, enter number of courses followed "
+            "by course numbers:\n";
+    for (int i = 0; i < m; ++i) {
+        int k;
+        cin >> k;
+        unordered_set<int> uniqueCourses;
+
+        for (int j = 0; j < k; ++j) {
+            int course;
+            cin >> course;
+            if (course < 1 || course > n) {
+                cout << "Invalid course number.\n";
+                return 1;
+            }
+            uniqueCourses.insert(course - 1);
+        }
+
+        for (int c : uniqueCourses) {
+            studentCourses[i].push_back(c);
+            enrollment[c]++;
+        }
+    }
+
+    Graph g = buildGraph(n, studentCourses);
+
+    Result a = greedy(g);
+    Result b = welshPowell(g);
+    Result c = dsatur(g);
+
+    printResult("Greedy Colouring", a);
+    printResult("Welsh-Powell", b);
+    printResult("DSATUR", c);
+
+    // Use DSATUR's result for room allocation.
+    int roomCount;
+    cout << "\nEnter number of available room types/rooms: ";
+    cin >> roomCount;
+
+    vector<Room> rooms(roomCount);
+    cout << "Enter each room name (one word) and capacity:\n";
+    for (auto& room : rooms)
+        cin >> room.name >> room.capacity;
+
+    cout << "\nRoom allocation using DSATUR:\n";
+    if (!allocateRooms(g, c.color, enrollment, rooms))
+        cout << "Add rooms, increase capacities, or reschedule.\n";
+
+    return 0;
+}
