@@ -1,0 +1,29 @@
+Greedy Colouring
+Exam slots needed: 2
+Execution time: 0.00 ms
+Course 1 -> Slot 1
+Course 2 -> Slot 2
+Course 3 -> Slot 1
+Course 4 -> Slot 2
+
+Welsh-Powell
+Exam slots needed: 2
+Execution time: 0.00 ms
+Course 1 -> Slot 1
+Course 2 -> Slot 2
+Course 3 -> Slot 1
+Course 4 -> Slot 2
+
+DSATUR
+Exam slots needed: 2
+Execution time: 0.00 ms
+Course 1 -> Slot 1
+Course 2 -> Slot 2
+Course 3 -> Slot 1
+Course 4 -> Slot 2
+
+Room allocation using DSATUR:
+Course 1, Slot 1 -> RoomA
+Course 2, Slot 2 -> RoomA
+Course 3, Slot 1 -> RoomB
+Course 4, Slot 2 -> RoomB
