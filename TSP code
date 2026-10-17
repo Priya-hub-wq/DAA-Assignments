@@ -1,0 +1,192 @@
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <limits>
+#include <algorithm>
+#include <iomanip>
+using namespace std;
+
+const long long INF = numeric_limits<long long>::max() / 4;
+
+struct Node {
+    vector<int> path;
+    vector<bool> visited;
+    long long cost;
+    long long bound;
+};
+
+// Lower bound: current cost + minimum outgoing edge
+// for the current city and each unvisited city.
+long long calculateBound(
+    const vector<vector<long long>>& cost,
+    const vector<bool>& visited,
+    int current,
+    long long currentCost
+) {
+    int n = cost.size();
+    long long bound = currentCost;
+
+    for (int u = 0; u < n; ++u) {
+        if (visited[u] && u != current)
+            continue;
+
+        long long minimum = INF;
+
+        for (int v = 0; v < n; ++v) {
+            if (u == v) continue;
+
+            // The current city must leave for an unvisited city,
+            // or return to the start when all cities are visited.
+            if (u == current && visited[v] && v != 0)
+                continue;
+
+            if (u != current && visited[v])
+                continue;
+
+            minimum = min(minimum, cost[u][v]);
+        }
+
+        if (minimum == INF)
+            return INF;
+
+        if (bound > INF - minimum)
+            return INF;
+
+        bound += minimum;
+    }
+
+    return bound;
+}
+
+struct Compare {
+    bool operator()(const Node& a, const Node& b) const {
+        return a.bound > b.bound;
+    }
+};
+
+void solveTSP(const vector<vector<long long>>& cost) {
+    int n = cost.size();
+
+    if (n < 2) {
+        cout << "Enter at least 2 cities.\n";
+        return;
+    }
+
+    // Check that every city has a possible outgoing edge.
+    for (int i = 0; i < n; ++i) {
+        bool possible = false;
+        for (int j = 0; j < n; ++j) {
+            if (i != j && cost[i][j] != INF) {
+                possible = true;
+                break;
+            }
+        }
+        if (!possible) {
+            cout << "No feasible tour exists.\n";
+            return;
+        }
+    }
+
+    priority_queue<Node, vector<Node>, Compare> pq;
+
+    Node root;
+    root.path = {0};
+    root.visited.assign(n, false);
+    root.visited[0] = true;
+    root.cost = 0;
+    root.bound = calculateBound(cost, root.visited, 0, 0);
+
+    pq.push(root);
+
+    long long bestCost = INF;
+    vector<int> bestPath;
+
+    while (!pq.empty()) {
+        Node node = pq.top();
+        pq.pop();
+
+        // Prune branches that cannot beat the best tour.
+        if (node.bound >= bestCost)
+            continue;
+
+        int current = node.path.back();
+
+        if ((int)node.path.size() == n) {
+            if (cost[current][0] == INF)
+                continue;
+
+            long long total = node.cost + cost[current][0];
+
+            if (total < bestCost) {
+                bestCost = total;
+                bestPath = node.path;
+            }
+            continue;
+        }
+
+        for (int next = 1; next < n; ++next) {
+            if (node.visited[next] || cost[current][next] == INF)
+                continue;
+
+            if (node.cost > INF - cost[current][next])
+                continue;
+
+            Node child = node;
+            child.path.push_back(next);
+            child.visited[next] = true;
+            child.cost += cost[current][next];
+            child.bound = calculateBound(
+                cost, child.visited, next, child.cost
+            );
+
+            if (child.bound < bestCost)
+                pq.push(child);
+        }
+    }
+
+    if (bestPath.empty()) {
+        cout << "No feasible tour exists.\n";
+        return;
+    }
+
+    cout << "\nOptimal delivery route: ";
+    for (int city : bestPath)
+        cout << city + 1 << " -> ";
+    cout << bestPath.front() + 1 << '\n';
+
+    cout << "Minimum total cost: " << bestCost << '\n';
+}
+
+int main() {
+    int n;
+    cout << "Enter number of cities: ";
+    cin >> n;
+
+    if (n < 2 || n > 20) {
+        cout << "Enter a number of cities between 2 and 20.\n";
+        return 0;
+    }
+
+    vector<vector<long long>> cost(
+        n, vector<long long>(n, INF)
+    );
+
+    cout << "Enter the cost matrix (-1 for no direct route):\n";
+
+    for (int i = 0; i < n; ++i) {
+        for (int j = 0; j < n; ++j) {
+            long long x;
+            cin >> x;
+
+            if (i == j) {
+                cost[i][j] = INF;
+            } else if (x >= 0) {
+                cost[i][j] = x;
+            }
+        }
+    }
+
+    solveTSP(cost);
+    return 0;
+}
