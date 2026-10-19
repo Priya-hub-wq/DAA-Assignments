@@ -1,29 +1,27 @@
-Greedy Colouring
-Exam slots needed: 2
-Execution time: 0.00 ms
-Course 1 -> Slot 1
-Course 2 -> Slot 2
-Course 3 -> Slot 1
-Course 4 -> Slot 2
+========== GREEDY COLOURING ==========
+Course  Colour  Exam Slot
+C1      Red     Slot 1
+C2      Blue    Slot 2
+C3      Red     Slot 1
+C4      Blue    Slot 2
 
-Welsh-Powell
-Exam slots needed: 2
-Execution time: 0.00 ms
-Course 1 -> Slot 1
-Course 2 -> Slot 2
-Course 3 -> Slot 1
-Course 4 -> Slot 2
+Exam Timetable:
+Slot 1 (Red): C1 C3
+Slot 2 (Blue): C2 C4
+Total exam slots required: 2
 
-DSATUR
-Exam slots needed: 2
-Execution time: 0.00 ms
-Course 1 -> Slot 1
-Course 2 -> Slot 2
-Course 3 -> Slot 1
-Course 4 -> Slot 2
+========== WELSH-POWELL ==========
+Course  Colour  Exam Slot
+C1      Red     Slot 1
+C2      Blue    Slot 2
+C3      Red     Slot 1
+C4      Blue    Slot 2
+Total exam slots required: 2
 
-Room allocation using DSATUR:
-Course 1, Slot 1 -> RoomA
-Course 2, Slot 2 -> RoomA
-Course 3, Slot 1 -> RoomB
-Course 4, Slot 2 -> RoomB
+========== DSATUR ==========
+Course  Colour  Exam Slot
+C1      Red     Slot 1
+C2      Blue    Slot 2
+C3      Red     Slot 1
+C4      Blue    Slot 2
+Total exam slots required: 2
